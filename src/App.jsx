@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Route, Routes } from "react-router-dom";
+import { lazy } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+import { SharedLayout } from "./components/SharedLayout/SharedLayout.jsx";
+import { MyLibrary } from "./pages/MyLibrary/MyLibrary.jsx";
+const Home = lazy(() => import("./pages/Home/Home.jsx"));
+const MovieDetails = lazy(() =>
+  import("./pages/MovieDetails/MovieDetails.jsx")
+);
+const Movies = lazy(() => import("./pages/Movies/Movies.jsx"));
+const NotFoundPage = lazy(() =>
+  import("./pages/NotFoundPage/NotFoundPage.jsx")
+);
+const Cast = lazy(() => import("./components/Cast/Cast.jsx"));
+const Reviews = lazy(() => import("./components/Reviews/Reviews.jsx"));
 
+export const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Routes>
+      <Route path="/" element={<SharedLayout />}>
+        <Route index element={<Home />} />
+        <Route path="/movies" element={<Movies />} />
+        <Route path="/library" element={<MyLibrary />} />
+        <Route path="/movies/:movieId" element={<MovieDetails />}>
+          <Route path="cast" element={<Cast />} />
+          <Route path="reviews" element={<Reviews />} />
+        </Route>
+      </Route>
 
-export default App
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
+  );
+};
+
+// export default App;
